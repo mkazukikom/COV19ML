@@ -140,6 +140,10 @@ for i in range(n_fold):
     print(table_list_all_tr[i].to_markdown())
     print(f'acc:{acc_list_all_tr[i]:.5f}, recall:{recall_list_all_tr[i]:.5f}, precision:{precision_list_all_tr[i]:.5f}, fvalue:{f1score_list_all_tr[i]:.5f}, mcc:{mcc_list_all_te[i]:.5f}')
 
+for i in range(n_fold):
+    print(table_list_all_te[i].to_markdown())
+    print(f'acc:{acc_list_all_te[i]:.5f}, recall:{recall_list_all_te[i]:.5f}, precision:{precision_list_all_te[i]:.5f}, fvalue:{f1score_list_all_te[i]:.5f}, mcc:{mcc_list_all_te[i]:.5f}')
+
 import pandas as pd
 import numpy as np
 from sklearn.metrics import roc_auc_score
@@ -175,6 +179,13 @@ tmp_imp_stat = pd.concat([tmp_imp.T.mean(), tmp_imp.T.std()],axis=1)
 tmp_imp_stat.columns=["mean","std"]
 tmp_imp_stat.sort_values(by="mean", ascending=False,inplace=True)
 tmp_imp_stat.to_csv("xgboost_2class_feature_importance.csv", index=True)
+print(tmp_imp_stat.iloc()[:30,:].to_markdown())
+
+tmp_imp = pd.concat(imp_list, axis=1)
+tmp_imp_stat = pd.concat([tmp_imp.T.mean(), tmp_imp.T.std()],axis=1)
+tmp_imp_stat.columns=["mean","std"]
+tmp_imp_stat.sort_values(by="mean", ascending=False,inplace=True)
+tmp_imp_stat.to_csv("xgboost_3class_feature_importance.csv", index=True)
 print(tmp_imp_stat.iloc()[:30,:].to_markdown())
 
 imp_dict = {}
