@@ -170,7 +170,7 @@ tmp_imp = pd.concat(imp_list, axis=1)
 tmp_imp_stat = pd.concat([tmp_imp.T.mean(), tmp_imp.T.std()],axis=1)
 tmp_imp_stat.columns=["mean","std"]
 tmp_imp_stat.sort_values(by="mean", ascending=False,inplace=True)
-tmp_imp_stat.to_csv("xgboost_2class_feature_importance.csv", index=True)
+tmp_imp_stat.to_csv("xgboost_7class_feature_importance.csv", index=True)
 print(tmp_imp_stat.iloc()[:30,:].to_markdown())
 
 imp_dict = {}
