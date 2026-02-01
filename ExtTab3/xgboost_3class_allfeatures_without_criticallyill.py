@@ -142,6 +142,10 @@ for i in range(n_fold):
     print(table_list_all_tr[i].to_markdown())
     print(f'acc:{acc_list_all_tr[i]:.5f}, recall:{recall_list_all_tr[i]:.5f}, precision:{precision_list_all_tr[i]:.5f}, fvalue:{f1score_list_all_tr[i]:.5f}, mcc:{mcc_list_all_te[i]:.5f}')
 
+for i in range(n_fold):
+    print(table_list_all_te[i].to_markdown())
+    print(f'acc:{acc_list_all_te[i]:.5f}, recall:{recall_list_all_te[i]:.5f}, precision:{precision_list_all_te[i]:.5f}, fvalue:{f1score_list_all_te[i]:.5f}, mcc:{mcc_list_all_te[i]:.5f}')
+
 import pandas as pd
 import numpy as np
 from sklearn.metrics import roc_auc_score
@@ -171,16 +175,3 @@ std_row.index = ['stddev']
 df_all_metrics_with_stats = pd.concat([df_all_metrics, mean_row, std_row])
 
 print(df_all_metrics_with_stats.to_markdown())
-
-tmp_imp = pd.concat(imp_list, axis=1)
-tmp_imp_stat = pd.concat([tmp_imp.T.mean(), tmp_imp.T.std()],axis=1)
-tmp_imp_stat.columns=["mean","std"]
-tmp_imp_stat.sort_values(by="mean", ascending=False,inplace=True)
-tmp_imp_stat.to_csv("xgboost_2class_feature_importance.csv", index=True)
-print(tmp_imp_stat.iloc()[:30,:].to_markdown())
-
-imp_dict = {}
-for k, v in zip(df_imp_all.index, df_imp_all.feature_importance):
-    if v>0:
-        imp_dict[k] = v
-xgb.plot_importance(imp_dict, xlabel="feature importance", max_num_features=10)
