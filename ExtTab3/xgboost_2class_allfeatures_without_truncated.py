@@ -166,9 +166,14 @@ print(f"auc tr mean: {np.mean(auc_list_all_tr)}, tr stddev: {np.std(auc_list_all
 for i in range(n_fold):
     table_list_all_tr[i].index = "train_"+table_list_all_tr[i].index+"_cv"+str(i)
     table_list_all_te[i].index = "valid_"+table_list_all_te[i].index+"_cv"+str(i)
+    
 for i in range(n_fold):
     imp_list[i].columns += '_cv' +str(i)
 
+for i in range(n_fold):
+    print(table_list_all_te[i].to_markdown())
+    print(f'acc:{acc_list_all_te[i]:.5f}, recall:{recall_list_all_te[i]:.5f}, precision:{precision_list_all_te[i]:.5f}, fvalue:{f1score_list_all_te[i]:.5f}, mcc:{mcc_list_all_te[i]:.5f}')
+    
 import pandas as pd
 import numpy as np
 
