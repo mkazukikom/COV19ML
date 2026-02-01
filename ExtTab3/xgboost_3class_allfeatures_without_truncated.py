@@ -141,6 +141,10 @@ for i in range(n_fold):
     print(table_list_all_tr[i].to_markdown())
     print(f'acc:{acc_list_all_tr[i]:.5f}, recall:{recall_list_all_tr[i]:.5f}, precision:{precision_list_all_tr[i]:.5f}, fvalue:{f1score_list_all_tr[i]:.5f}, mcc:{mcc_list_all_te[i]:.5f}')
 
+for i in range(n_fold):
+    print(table_list_all_te[i].to_markdown())
+    print(f'acc:{acc_list_all_te[i]:.5f}, recall:{recall_list_all_te[i]:.5f}, precision:{precision_list_all_te[i]:.5f}, fvalue:{f1score_list_all_te[i]:.5f}, mcc:{mcc_list_all_te[i]:.5f}')
+
 import pandas as pd
 import numpy as np
 from sklearn.metrics import roc_auc_score
