@@ -209,3 +209,15 @@ tmp_imp_stat = pd.concat([tmp_imp.T.mean(), tmp_imp.T.std()],axis=1)
 tmp_imp_stat.columns=["mean","std"]
 tmp_imp_stat.sort_values(by="mean", ascending=False,inplace=True)
 print(tmp_imp_stat.iloc()[:10,:].to_markdown())
+
+imp_dict = {}
+for k, v in zip(df_imp_all.index, df_imp_all.feature_importance):
+    if v>0:
+        imp_dict[k] = v
+xgb.plot_importance(imp_dict, max_num_features=10, xlabel="Feature Importance")
+
+tmp_imp = pd.concat(imp_list, axis=1)
+tmp_imp_stat = pd.concat([tmp_imp.T.mean(), tmp_imp.T.std()],axis=1)
+tmp_imp_stat.columns=["mean","std"]
+tmp_imp_stat.sort_values(by="mean", ascending=False,inplace=True)
+print(tmp_imp_stat.iloc()[:10,:].to_markdown())
