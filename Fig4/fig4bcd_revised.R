@@ -10,11 +10,10 @@ data <- read.csv("combined_data.csv")
 # COVID関連クラスの統合
 data$CLASS <- ifelse(data$CLASS %in% c("COVID_moderate", "COVID_severe"), "COVID_moderate_severe", data$CLASS)
 
-# HCとCOVID19のデータのみを選択
 data_filtered <- data %>%
   filter(CLASS %in% c("HC", "COVID_mild", "COVID_moderate_severe", "AAV", "AD", "SSc", "SLE")) %>%
-  select(CLASS, "BCORP1", "ZADH2", "TOP1", "CLIP4", "SRSF7", "MVK", "QDPR", "SNRPA", "KAT2A", "PECR",
-         "CENPP", "CCDC74B", "TRIM21", "SNRPB", "KCNAB1", "CENPB", "BCL7A", "POLR2A", "PDLIM7", "FYTTD1")
+  select(CLASS, "BCORP1", "ZADH2", "CLIP4", "TOP1", "SRSF7", "SNRPA", "KCNAB1", "KAT2A", "MVK", "SNRPB",
+         "CENPP", "QDPR", "TRIM21", "PECR", "POLR2A", "CCDC74B", "CENPB", "FYTTD1","PDLIM7","BCL7A")
 
 # PCAを実行する列（遺伝子発現値）の選択
 pca_data <- data_filtered[, -1]  # 最初の列(CLASS)を除外
@@ -59,16 +58,44 @@ loadings <- as.data.frame(pca_result$rotation[, 1:2])  # PC1とPC2の負荷量
 colnames(loadings) <- c("PC1", "PC2")
 loadings$Gene <- rownames(loadings)
 
+loadings$cluster <- "Other"
+
+loadings$cluster[loadings$Gene %in% c("KAT2A", "BCORP1")] <- "Cluster I"
+
+loadings$cluster[loadings$Gene %in% c(
+  "MVK", "KCNAB1", "ZADH2", "CLIP4", "QDPR",
+  "PECR", "FYTTD1", "CCDC74B"
+)] <- "Cluster II"
+
+loadings$cluster[loadings$Gene %in% c(
+  "TRIM21", "PDLIM7", "BCL7A", "SRSF7", "SNRPB",
+  "SNRPA", "CENPB", "CENPP", "POLR2A", "TOP1"
+)] <- "Cluster III"
+
+
 # PC1とPC2の負荷量のグラフを表示
-ggplot(loadings, aes(x = PC1, y = PC2, label = Gene)) +
-  geom_text(vjust = 1.5, size = 3) +
+cluster_colors <- c(
+  "Cluster I"   = "black", 
+  "Cluster II"  = "sienna",
+  "Cluster III" = "orchid"
+)
+
+loadings$cluster <- factor(loadings$cluster,
+                           levels = c("Cluster I", "Cluster II", "Cluster III", "Other"))
+
+ggplot(loadings, aes(x = PC1, y = PC2, label = Gene, color = cluster)) +
+  geom_text(size = 3) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_vline(xintercept = 0, linetype = "dashed") +
+  scale_color_manual(name = "Cluster", values = cluster_colors) +
+  guides(color = guide_legend(override.aes = list(label = "●", size = 5))) +
   theme_minimal() +
-  labs(title = "Loadings Plot for PC1 and PC2",
-       x = "PC1 Loadings",
-       y = "PC2 Loadings") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  labs(
+    title = "Loadings Plot for PC1 and PC2",
+    x = "PC1 Loadings",
+    y = "PC2 Loadings",
+    color = "Cluster"
+  )
 
 # PC1の負荷量を棒グラフで表示
 ggplot(loadings, aes(x = reorder(Gene, PC1), y = PC1)) +
